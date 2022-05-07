@@ -42,12 +42,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
             if(mysqli_num_rows($result) > 0)
             {
                 $user_data = mysqli_fetch_assoc($result);
+                if($user_data['role']=='quality control')
+                {
+                    if($user_data['password'] == $password)
+                    {
+                        $_SESSION['user_id'] = $user_data['user_id'];
+                        header("Location: quality/dashboard.php");
+                        die;
+                    }
+                }
+            else if($user_data['role']=='user')
+            {
                 if($user_data['password'] == $password)
                 {
                     $_SESSION['user_id'] = $user_data['user_id'];
                     header("Location: index.php");
                     die;
                 }
+            }
+              
             }
         }
         $errors['password'] = "Wrong username or password!";
