@@ -1,0 +1,445 @@
+:root{
+    --nav-width: 200px;
+    --nav-icon-width: 50px;
+    --nav-border-width: 8px;
+    --header-height: 80px;
+}
+
+*{
+    margin: 0;
+    font-family: 'Poppins' ,sans-serif;
+}
+
+/* the header style for all Quality Control pages CSS --------------------------------------------------------------- */
+
+header{
+    display: flex;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    height: var(--header-height);
+    justify-content: space-between;
+    align-items: center;
+    background: #5a5a5a;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    z-index: 100;
+}
+
+.menu-icon{
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+
+.menu-icon-container{
+    width: var(--nav-icon-width);
+    text-align: center;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.search-wrapper{
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    overflow-x: hidden;
+    background-color: #fff;
+}
+
+.search-icon{
+    padding: 0rem 1rem;
+    color: #5a5a5a;
+}
+
+.search-wrapper input{
+    height: 100%;
+    padding: .5rem;
+    border: none;
+    outline: none;
+}
+
+.user-wrapper{
+    display: flex;
+    align-items: center;
+    margin-right: 25px;
+}
+
+.user-wrapper img{
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.user-wrapper h4{
+    margin: 0;
+    color: white;
+}
+
+.user-wrapper small{
+    display: inline-block;
+    color: white;
+}
+
+/* the page-container style for all the Quality Control pages CSS ----------------------------------------------------------- */
+
+.page-container{
+    display: flex;
+}
+
+/* the navbar style for all the Quality Control pages CSS ----------------------------------------------------------- */
+
+.nav{
+    position: relative;
+    width: var(--nav-width);
+    min-height: calc(100vh - var(--header-height));
+    top: var(--header-height);
+    background-color: #5a5a5a;
+    transition: ease-in-out 0.5s;
+    flex-shrink: 0;
+    z-index: 99;
+}
+
+.nav__list{
+    position: sticky;
+    top: var(--header-height);
+    height: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+.nav--collapsed{
+    width: var(--nav-icon-width);
+    /* width: 0; */
+}
+
+.nav--collapsed .nav__label{
+    display: none;
+}
+
+/* .nav--collapsed .nav__link{
+    display: none;
+} */
+
+.nav__link {
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 0;
+    margin: 0 0 5px 0;
+    text-decoration: none;
+}
+
+.nav__link:hover{
+    background-color: #bbb;
+    cursor: pointer;
+    transition: ease-in-out .2s;
+}
+
+.nav__link.active{
+    background-color: #53a4dd;
+    /* border-right: 10px solid #53a4dd;
+    background-color: #bbb; */
+    transition: ease-in-out 1s;
+}
+
+.nav__icon-container{
+    width: var(--nav-icon-width);
+    height: var(--nav-icon-width);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nav__link:nth-child(6){
+    bottom: 10px;
+}
+
+/* click on the navbar border to make it collapse*/
+/* .nav__border{
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: var(--nav-border-width);
+    height: inherit;
+    background-color: #bbb;
+    transition: background-color 0.2s;
+    cursor: ew-resize;
+}
+.nav__border:hover{
+    background-color: #aaa;
+} */
+
+/* the content-box style for all the Quality Control pages CSS -------------------------------------------------------- */
+
+.content{
+    position: relative;
+    top: var(--header-height);
+    padding: 50px;
+    flex-grow: 1;
+}
+
+/* for the dashboard page style CSS -------------------------------------------------------------------------------------- */
+
+.cards{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 2rem;
+    margin-bottom: 50px;
+}
+
+.card-single{
+    display: flex;
+    justify-content: space-between;
+    background-color: #53a4dd;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    color: white;
+    text-decoration: none;
+    transition: ease-in-out 0.3s;
+}
+
+.card-single div:last-child span{
+    font-size: 3rem;
+    color: white;
+}
+
+.card-single div:first-child span{
+    color: white;
+}
+
+.card-single:hover{
+    background: #498fc2
+}
+
+.recent-grid{
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: 65% auto;
+}
+
+.card{
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 10px;
+}
+
+.card-header a{
+    background: #53a4dd;
+    border-radius: 15px;
+    color: #fff;
+    font-size: .8rem;
+    padding: .5rem 1rem;
+    border: 1px solid #53a4dd;
+    text-decoration: none;
+    overflow: hidden;
+}
+.card-header a:hover{
+    background: #498fc2;
+}
+
+table{
+    border-collapse: collapse; 
+}
+
+thead tr{
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+thead td{
+    font-weight: 700;
+}
+
+td{
+    padding: .5rem 1rem;
+    font-size: .9rem;
+    color: #222;
+}
+
+tbody tr{
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:last-child{
+    border-bottom: 3px solid #53a4dd;
+}
+
+tbody tr:nth-child(even){
+    background-color: #f3f3f3;
+}
+
+td .status{
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+tr td:last-child{
+    display: flex;
+    align-items: center;
+}
+
+.status.purple{
+    background: rebeccapurple;
+}
+
+.status.pink{
+    background: deeppink;
+}
+
+.status.orange{
+    background: orangered;
+}
+
+.table-responsive{
+    width: 100%;
+    overflow-x: auto;
+}
+
+.customer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 25px;
+}
+
+.info{
+    display: flex;
+    align-items: center;
+}
+
+.info img{
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.info h4{
+    font-size: 12px;
+    font-weight: 700;
+    color: #222;
+    padding: 0;
+    margin: 0;
+}
+
+.info small{
+    font-size: 12px;
+    font-weight: 600;
+    color: #5a5a5a;
+}
+
+.contact span{
+    font-size: 1.2rem;
+    display: inline-block;
+    margin-left: .5rem;
+    color: #5a5a5a;
+}
+
+/* for the users page style CSS -------------------------------------------------------------------------------------- */
+
+.table-box{
+    width: 75%;
+    height: 480px;
+    margin: 0 auto;
+    overflow-y: auto ;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+}
+
+/* to hide the scrollbar without removing its Functionality */
+.table-box::-webkit-scrollbar {
+    display: none;
+}
+
+.table{
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.sticky{
+    position: sticky;
+    top: 0;
+}
+
+.table thead tr{
+    background-color: #53a4dd;
+    color: #fff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.table th,
+.table td{
+    padding: 12px 15px;
+}
+
+.table tbody tr{
+    border-bottom: 1px solid #ddd;
+}
+
+.table tbody tr:nth-of-type(even){
+    background-color: #f3f3f3;
+}
+
+.table tbody tr:last-of-type{
+    border-bottom: 3px solid #53a4dd;
+}
+
+/* remember to empliment this style to the row of the active user (current session) */
+.table tbody tr.active-row{
+    font-weight: bold;
+    color: #53a4dd;
+}
+
+.crud-form{
+    margin: 50px auto;
+    text-align: center;
+    justify-content: center;
+    width: fit-content;
+    background-color: #fbfbfb;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    padding: 40px 40px 20px 40px;
+}
+
+.crud-form-input{
+    margin: 5px 0 5px 10px;
+    height: 25px;
+    width: 300px;
+    border-radius: 5px;
+    border: solid thin #aaa;
+    font-size: medium;
+    text-align: center;
+}
+
+.form-button{
+    margin: 15px 0;
+    width: 6rem;
+    height: 30px;
+    color: white;
+    background-color: #53a4dd;
+    border: none;
+    border-radius: 5px;
+    transition: 0.5s;
+}
+
+.form-button:hover{
+    background-color: #275688;
+}
