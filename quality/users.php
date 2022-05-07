@@ -100,21 +100,30 @@
                 <div class="crud">
                     <form action="" method="POST" class="crud-form" enctype= "multipart/form-data">
                         <!-- <label class="crud-form-label">Name</label> -->
-                        <input type="text" name="name" placeholder="Name" class="crud-form-input"><br>
+                        <input type="text" name="username" placeholder="Name" class="crud-form-input"><br>
                         <!-- <label class="crud-form-label">Password</label> -->
                         <input type="text" name="password" placeholder="Password" class="crud-form-input"><br>
                         <!-- <label class="crud-form-label">E-mail</label> -->
                         <input type="text" name="email" placeholder="E-mail" class="crud-form-input"><br>
+                        <!-- <label class="crud-form-label">Role</label> -->
+                        <label for="role">Choose Role:</label>
+                        <select name="role">
+                        <option value="user">User</option>
+                        <option value="customer service">Customer service</option>
+                        <option value="quality">Quality control</option>
                         
+                        </select>
+                        <input type="file" name="image" class="crud-form-input"><br>
                         <button class="form-button" type="submit" name="save">OK</button>
                     </form>
                 </div>
                 <?php
                     if(isset($_POST['save'])){
-                        $name = $_POST['name'];
+                        $name = $_POST['username'];
                         $password = $_POST['password'];
                         $email = $_POST['email'];
                         $role = $_POST['role'];
+                        $file=$_FILES['image'];
                         
                         $errorCount = 0;
                         
@@ -140,7 +149,7 @@
                         }
                         if($errorCount == 0)
                         {
-                            $query = "INSERT into users (name, password) values ('$name','$password')";
+                            $query = "INSERT into users (user_name, password ,role) values ('$name','$password','$role')";
                             mysqli_query($con, $query);
                         }
                         else
