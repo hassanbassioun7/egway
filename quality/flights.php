@@ -1,3 +1,14 @@
+<?php
+
+    include_once("../includes/connection.php");
+    include_once("../includes/functions.php");
+    include_once("index.php");
+
+    $selectquery = "SELECT * FROM users";
+    $selectresult = mysqli_query($con, $selectquery);
+ 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +18,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/quality.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <title>Quality Control - users</title>
+    <title>Quality Control - flights</title>
 </head>
 <body>
     <header>
@@ -24,10 +35,30 @@
         </div>
 
         <div class="user-wrapper">
-            <img src="../media/Pp.jpeg" width="30px" height="30px" alt="Profile Picture">
+            <?php
+                $user_data = check_login($con);
+                if(isset($user_data))
+                {
+                    echo '<img src="data:image;base64,' .base64_encode($user_data['image']).'" class="profile_picture">';
+                }
+            ?>
             <div>
-                <h4>Hassan Bassiouny</h4>
-                <small>Quality Control</small>
+                <h4>
+                    <?php 
+                        if (isset($user_data))
+                        {
+                            echo $user_data['name'];
+                        }
+                    ?>
+                </h4>
+                <small>
+                    <?php
+                        if(isset($user_data))
+                        {
+                            echo $user_data['role'];
+                        }
+                    ?>
+                </small>
             </div>
         </div>
     </header>
@@ -65,6 +96,12 @@
                         <span class="material-icons">paid</span>
                     </div>
                     <span class="nav__label">Profit</span>
+                </a>
+                <a href="../includes/logout.php" class="nav__link">
+                    <div class="nav__icon-container">
+                        <span class="material-icons">logout</span>
+                    </div>
+                    <span class="nav__label">Logout</span>
                 </a>
             </ul>
         </nav>
