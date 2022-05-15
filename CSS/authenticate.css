@@ -1,7 +1,8 @@
 *{
     font-family: "Poppins", sans-serif;
 }
-#textbox{
+
+.textbox{
     height: 25px;
     width: 100%;
     border-radius: 5px;
@@ -9,7 +10,7 @@
     border: solid thin #aaa;
 }
 
-#button{
+.button{
     padding: 10px;
     width: 100px;
     color: white;
@@ -19,11 +20,11 @@
     transition: background-color 0.5s;
 }
 
-#button:hover {
+.button:hover {
   background-color: #1f456e;
 }
 
-#box{
+.box{
     background-color: rgba(128, 128, 128, 0.5);
     width: 300px;
     padding: 30px;
@@ -39,7 +40,7 @@
     font-size: small;
 }
 
-#login, #signup{
+.login, .signup{
     font-size: 30px;
     margin: 10px;
     color: white;
@@ -62,7 +63,7 @@ a:hover{
     color: #1f456e;
 }
 
-#radiobutton:after {
+.radiobutton:after {
     width: 10px;
     height: 10px;
     border-radius: 15px;
@@ -77,7 +78,7 @@ a:hover{
     transition: background-color 0.5s;
 }
 
-#radiobutton:checked:after {
+.radiobutton:checked:after {
     width: 10px;
     height: 10px;
     border-radius: 15px;
