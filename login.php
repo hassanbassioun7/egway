@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 include_once("includes/connection.php");
 include_once("includes/functions.php");
@@ -27,11 +26,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
     
     if(!array_filter($errors))
     {
-        if($user_name=="admin123" && $password=="123"){
-            header("Location: admin.html");
-            die;
-        }
-
         //read from database
         $query = "SELECT * FROM users WHERE user_name = '$user_name' limit 1";
 
@@ -51,20 +45,26 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                         die;
                     }
                 }
-            else if($user_data['role']=='user')
-            {
-                if($user_data['password'] == $password)
+                else if($user_data['role']=='customer service')
+                {
+                    if($user_data['password'] == $password)
+                    {
+                        $_SESSION['user_id'] = $user_data['user_id'];
+                        header("Location: service/index.php");
+                        die;
+                    }
+                }
+                else if($user_data['password'] == $password)
                 {
                     $_SESSION['user_id'] = $user_data['user_id'];
                     header("Location: index.php");
                     die;
                 }
             }
-              
-            }
         }
-        $errors['password'] = "Wrong username or password!";
     }
+
+    $errors['password'] = "Wrong username or password!";
 }
 ?>
 
@@ -79,20 +79,20 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     </head>
     <body class="background">
-        <div id="box">
+        <div class="box">
 
             <form name="login-form" method="post">
-                <div id="login">Login</div>
+                <div class="login">Login</div>
 
-                <input id="textbox" type="text" name="user_name" placeholder="Username" value="<?php echo $user_name ?>"><br>
+                <input class="textbox" type="text" name="user_name" placeholder="Username" value="<?php echo $user_name ?>"><br>
                 <div class="red-text"><?php echo $errors['user_name']; ?></div><br>
 
-                <input id="textbox" type="password" name="password" placeholder="Password" value="<?php echo $password ?>"><br>
+                <input class="textbox" type="password" name="password" placeholder="Password" value="<?php echo $password ?>"><br>
                 <div class="red-text"><?php echo $errors['password']; ?></div><br>
 
-                <input id="button" type="submit" value="Login"><br><br>
+                <div style="text-align: center;"><input class="button" type="submit" value="Login"></div><br>
 
-               <p style="color: white">Create a <a href="signup.php">new account</a></p><br><br>
+               <p style="color: white; text-align: center;">Create a <a href="signup.php">new account</a></p>
 
             </form>
         </div>
