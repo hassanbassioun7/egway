@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 include_once("includes/connection.php");
 include_once("includes/functions.php");
@@ -42,21 +41,17 @@ $user_data = check_login($con);
                     echo "<li><a href=\"includes/logout.php\" class=\"login_nav\">Logout</a></li>";
                 }
                 ?>
-                <!-- <ul>
-                    <li><a href=\"#\">User</a></li>
-                    <li><a href=\"#\">Customer Service</a></li>
-                    <li><a href=\"#\">Quality Control</a></li>
-                </ul> -->
-
-                <!-- <a id="logout-link" href="includes/logout.php">Logout</a> -->
             </ul>
         </nav>
 
         <script src="JS/intro.js"></script>
 
         <div id="hello">
-            <?php if (isset($user_data)) echo 'hello, ' . $user_data['name']; ?><br><br>
+            <?php 
+                if (isset($user_data)){
+                    echo '<img src="data:image;base64,' .base64_encode($user_data['image']).'" style="vertical-align: middle; margin-right:10px;" class="profile_picture">' . $user_data['name']; 
+                }
+            ?>
         </div>
-
     </body>
 </html>
