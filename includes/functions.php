@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 function check_login($con)
 {
     if(isset($_SESSION['user_id']))
@@ -14,10 +16,6 @@ function check_login($con)
             return $user_data;
         }
     }
-
-    //redirect to login
-    // header("Location: login.php");
-    // die;
 }
 
 // function random_num($length)
