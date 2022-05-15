@@ -9,7 +9,7 @@ $con = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
 if(!$con)
 {
-    die("failed to connect!");
+    die(mysqli_connect_error($con));
 }
 
 ?>
