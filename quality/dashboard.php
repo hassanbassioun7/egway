@@ -1,3 +1,13 @@
+<?php
+
+    include_once("../includes/connection.php");
+    include_once("../includes/functions.php");
+
+    $selectquery = "SELECT * FROM users";
+    $selectresult = mysqli_query($con, $selectquery);
+ 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +17,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/quality.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <title>Quality Control - users</title>
+    <title>Quality Control - dashboard</title>
 </head>
 <body>
     <header>
@@ -24,10 +34,30 @@
         </div>
 
         <div class="user-wrapper">
-            <img src="../media/Pp.jpeg" width="30px" height="30px" alt="Profile Picture">
+            <?php
+                $user_data = check_login($con);
+                if(isset($user_data))
+                {
+                    echo '<img src="data:image;base64,' .base64_encode($user_data['image']).'" class="profile_picture">';
+                }
+            ?>
             <div>
-                <h4>Hassan Bassiouny</h4>
-                <small>Quality Control</small>
+                <h4>
+                    <?php 
+                        if (isset($user_data))
+                        {
+                            echo $user_data['name'];
+                        }
+                    ?>
+                </h4>
+                <small>
+                    <?php
+                        if(isset($user_data))
+                        {
+                            echo $user_data['role'];
+                        }
+                    ?>
+                </small>
             </div>
         </div>
     </header>
@@ -66,40 +96,55 @@
                     </div>
                     <span class="nav__label">Profit</span>
                 </a>
+                <a href="../includes/logout.php" class="nav__link">
+                    <div class="nav__icon-container">
+                        <span class="material-icons">logout</span>
+                    </div>
+                    <span class="nav__label">Logout</span>
+                </a>
             </ul>
         </nav>
         <div class="content">
             <div class="cards">
                 <a href="users.php" class="card-single">
                     <div>
-                        <h1>54</h1>
-                        <span>Users</span>
+                        <h1>
+                            <?php
+                                $travellersquery = "SELECT user_id from users WHERE role = 'user' ";
+                                $travellersresult = mysqli_query($con, $travellersquery);
+
+                                $row = mysqli_num_rows($travellersresult);
+
+                                echo $row ;
+                            ?>
+                        </h1>
+                        <span>travellers</span>
                     </div>
                     <div>
                         <span class="material-icons">person</span>
                     </div>
                 </a>
-                <a href="" class="card-single">
+                <a href="flights.php" class="card-single">
                     <div>
-                        <h1>79</h1>
+                        <h1>0</h1>
                         <span>Flights</span>
                     </div>
                     <div>
                         <span class="material-icons">flight</span>
                     </div>
                 </a>
-                <a href="" class="card-single">
+                <a href="flights.php" class="card-single">
                     <div>
-                        <h1>124</h1>
+                        <h1>0</h1>
                         <span>Tickets</span>
                     </div>
                     <div>
                         <span class="material-icons">airplane_ticket</span>
                     </div>
                 </a>
-                <a href="" class="card-single">
+                <a href="profit.php" class="card-single">
                     <div>
-                        <h1>$6k</h1>
+                        <h1>$0</h1>
                         <span>Income</span>
                     </div>
                     <div>
