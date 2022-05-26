@@ -1,89 +1,75 @@
 <?php
-
     include_once("includes/connection.php");
-    include_once("includes/functions.php");
 
-    $name=$user_name=$password=$con_pass=$user_birth=$email=$gender=$image='';
-    //an array for errors
-    $errors = array('name'=>'', 'user_name'=>'', 'password'=>'', 'con_pass'=>'','email'=>'', 'user_birth'=>'', 'gender'=>'', 'image'=>'');
+    $name=$username=$password=$conPass=$user_birth=$gender=$image=$email='';
 
-    if($_SERVER['REQUEST_METHOD'] == "POST")
+    $errors = array(
+    'name'=> false,
+    'username'=> false,
+    'password'=> false,
+    'conPass'=> false,
+    'email'=> false,
+    'user_birth'=> false,
+    'gender'=> false,
+    'image'=> false);
+
+    if(isset($_POST["signup"]))
     {
-        //something was posted
         $name=$_POST['name'];
-        $user_name=$_POST['user_name'];
+        $username=$_POST['username'];
         $password=$_POST['password'];
-        $con_pass=$_POST['con_pass'];
+        $conPass=$_POST['conPass'];
         $email=$_POST['email'];
         $user_birth=$_POST['user_birth'];
+        $gender = $_POST['gender'];
         $imageName= $_FILES['image']['name'];
         $imageTmpName= $_FILES['image']['tmp_name'];
         $imageSize= $_FILES['image']['size'];
         $imageError= $_FILES['image']['error'];
         // $imageType= $_FILES['image']['type'];
         
-        if (isset($_POST['gender']))
-            $gender=$_POST['gender'];
-        
-        if(empty($name)) 
-        {
-            $errors['name'] = "please enter your name";
+        if (!preg_match ('/^[a-zA-Z\s]+$/', $name )){ 
+            $errors['name'] = true;
         }
 
-        if(empty($user_name)) 
+        $usernameQuery = "SELECT * FROM users WHERE user_name = '$username'";
+        $usernameResult = mysqli_query($con, $usernameQuery);
+        $user_rows = mysqli_num_rows($usernameResult);
+        if($user_rows > 0)
         {
-            $errors['user_name'] = "please enter a username";
+            $errors['username'] = true;
         }
-        else if(is_numeric($user_name))
-        {
-            $errors['user_name'] = "the username can't be a numeric value";
-        }
-        $query = mysqli_query($con, "SELECT * FROM users WHERE user_name = '$user_name'");
-        if(mysqli_num_rows($query) > 0)
-        {
-            $errors['user_name'] = "this username already exists!";
+        if(strlen($username) < 5){
+            $errors['username'] = true;
         }
 
-        if(empty($password))
-        {
-            $errors['password'] = "please enter a password";
+        $passwordQuery = "SELECT * FROM users WHERE password = '$password'";
+        $passwordResult = mysqli_query($con, $passwordQuery);
+        $passwordRow = mysqli_num_rows($passwordResult);
+        if($passwordRow > 0 || strlen($password) < 5){
+            $errors['password'] = true;
+            if($conPass == $password){
+                $errors['conPass'] = true;
+            }
         }
-        // else if(strlen($password)<6)
-        // {
-        //     $errors['password'] = "password must have atleast 6 characters"
-        // }
-        if(empty($con_pass) || $password!=$con_pass)
-        {
-            $errors['con_pass'] ="password did not match";
-        }
-        $query = mysqli_query($con, "SELECT * FROM users WHERE password = '$password'");
-        if(mysqli_num_rows($query) > 0)
-        {
-            $errors['password'] = "this password is already taken, please choose another one";
+
+        if($conPass != $password){
+            $errors['conPass'] = true;
         }
 
         if(empty($email))
         {
-            $errors['email'] = "please enter your email";
+            $errors['email'] = true;
         }
-        //to check if email format is valid or not
+        
         else if(!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
-            $errors['email'] = "this email is not valid";
+            $errors['email'] = true;
         }
         $query = mysqli_query($con, "SELECT * FROM users WHERE email = '$email'");
         if(mysqli_num_rows($query) > 0)
         {
-            $errors['email'] = "this email is already signed up";
-        }
-
-        if(empty($user_birth))
-        {
-            $errors['user_birth'] = "please enter your birthday";
-        }
-        if(empty($gender))
-        {
-            $errors['gender'] = "please enter your gender";
+            $errors['email'] = true;
         }
 
         if(empty($imageName)){
@@ -112,8 +98,8 @@
 
         if(!array_filter($errors))
         {
-            //save to database
-            $query = "INSERT INTO users (name, user_name, password, email, user_birth, gender, `image`) values ('$name','$user_name','$password','$email', '$user_birth','$gender', '$image')";
+            $query = "INSERT INTO users (name, user_name, password, email, user_birth, gender, `image`) 
+            values ('$name','$username','$password','$email', '$user_birth','$gender', '$image')";
 
             mysqli_query($con, $query);            
 
@@ -122,7 +108,6 @@
         }
     }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -132,53 +117,128 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- link for the ajax -->
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
     </head>
     <body class="background">
         <div class="box">
-
             <form name="signup-form" method="post" enctype="multipart/form-data">
                 <div class="signup">Signup</div>
 
-                <!-- add (required="true") as an attribute for the input if you want to do frontend validation for the input fields (if empty) -->
-                
-                <input class="textbox" type="text" name="name" placeholder="Full Name" value="<?php echo $name ?>" ><br>
-                <div class="red-text"><?php echo $errors['name']; ?></div><br>
+                <input type="text" name="name" id="name" class="textbox" placeholder="Full Name" onkeyup="Name()" 
+                value="<?php if($errors['name'] != true) echo $name ?>" required><br>
+                <span id="nameMsg"></span><br>
 
-                <input class="textbox" type="text" name="user_name" placeholder="Username" value="<?php echo $user_name ?>"><br>
-                <div class="red-text"><?php echo $errors['user_name']; ?></div><br>
+                <input class="textbox" type="text" name="username" id="username" placeholder="Username" onkeyup="userName()" 
+                value="<?php if($errors['username'] != true) echo $username ?>" required><br>
+                <span id="usernameMsg"></span><br>
 
-                <input class="textbox" type="password" name="password" placeholder="Password" value="<?php echo $password ?>"><br>
-                <div class="red-text"><?php echo $errors['password']; ?></div><br>
+                <input class="textbox" type="password" name="password" id="password" placeholder="Password" onkeyup="Password()" 
+                value="<?php if($errors['password'] != true) echo $password ?>" required><br>
+                <span id="passMsg"></span><br>
 
-                <input class="textbox" type="password" name="con_pass" placeholder="Confirm Password" value="<?php echo $con_pass ?>"><br>
-                <div class="red-text"><?php echo $errors['con_pass']; ?></div><br>
+                <input class="textbox" type="password" name="conPass" placeholder="Confirm Password"  
+                value="<?php if($errors['conPass'] == false) echo $conPass ?>" required><br><br>
 
-                <input class="textbox" type="text" name="email" placeholder="E-mail" value="<?php echo $email ?>"><br>
-                <div class="red-text"><?php echo $errors['email']; ?></div><br>
+                <input class="textbox" type="text" name="email" id="email" placeholder="Email" onkeyup="Mail()" 
+                value="<?php if($errors['email'] != true) echo $email ?>" required><br>
+                <span id="mailMsg"></span><br>
 
-                <input class="textbox" type="date" name="user_birth" max="2004-01-01" value="<?php echo $user_birth ?>"><br>
-                <div class="red-text"><?php echo $errors['user_birth']; ?></div><br>
+                <input class="textbox" type="date" name="user_birth" max="2004-01-01"
+                value="<?php echo $user_birth ?>" required><br>
+                <span></span><br>
 
 
                 <label style="color: white" for="gender">Male</label>
-                <input type="radio" name="gender" value="male" class="radiobutton" <?php if ($gender=='male') echo "checked"; ?> >
+                <input type="radio" name="gender" value="male" class="radiobutton" <?php if($gender == 'male') echo 'checked' ?>>
 
                 <label style="color: white" for="gender">Female</label>
-                <input type="radio" name="gender" value="female" class="radiobutton" <?php if ($gender=='female') echo "checked"; ?> >
-
-                <div class="red-text"><?php echo $errors['gender']; ?></div><br>
+                <input type="radio" name="gender" value="female" class="radiobutton" <?php if($gender == 'female') echo 'checked' ?> required><br><br>
 
                 <div style="display: flex">
                     <label style="color: white; margin-right:10px;" for="image">Picture:</label>
-                    <input type="file" name="image" id="image" class="form-image"><br>
+                    <input type="file" name="image" id="image" class="form-image" required><br>
                 </div>
-                <div class="red-text"><?php echo $errors['image']; ?></div><br>
+                <span><?php if($errors['image'] != false) echo '<span class="error-text">
+                <span class="material-icons" style="font-size: 18px; vertical-align: middle;"> error_outline </span>' . $errors['image'] . '</span>' ?></span><br>
                 
-                <div style="text-align: center"><input class="button" type="submit" value="Signup"></div><br>
-
-                <p style="color: white; text-align: center;"> Already have an account? <a href="login.php">Login</a></p>
-
+                <div style="text-align: center"><input class="button" type="submit" name="signup" value="Signup"></div>
             </form>
+            <p style="color: white; text-align: center;"> Already have an account? <a href="login.php">Login</a></p>
         </div>
     </body>
+
+    <script>
+        
+        function Name()
+        {
+            jQuery.ajax(
+            {
+                url:"includes/check.php",
+                data:'name=' + $("#name").val(),
+                type: "POST",
+                success: function(data)
+                {
+                    $("#nameMsg").html(data);
+                }
+            });
+        }
+
+        function userName()
+        {
+            jQuery.ajax(
+            {
+                url:"includes/check.php",
+                data:'username=' + $("#username").val(),
+                type: "POST",
+                success: function(data)
+                {
+                    $("#usernameMsg").html(data);
+                }
+            });
+        }
+
+        function Password()
+        {
+            jQuery.ajax(
+            {
+                url:"includes/check.php",
+                data:'password=' + $("#password").val(),
+                type: "POST",
+                success: function(data)
+                {
+                    $("#passMsg").html(data);
+                }
+            });
+        }
+
+        function conPass()
+        {
+            jQuery.ajax(
+            {
+                url:"includes/check.php",
+                data:'conPass=' + $("#conPass").val(),
+                type: "POST",
+                success: function(data)
+                {
+                    $("#conpassMsg").html(data);
+                }
+            });
+        }
+
+        function Mail()
+        {
+            jQuery.ajax(
+            {
+                url:"includes/check.php",
+                data:'email=' +$("#email").val(),
+                type: "POST",
+                success: function(data)
+                {
+                    $("#mailMsg").html(data);
+                }
+            });
+        }
+    </script>
 </html>
