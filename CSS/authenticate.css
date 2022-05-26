@@ -35,7 +35,12 @@
     border-radius: 10px;
 }
 
-.red-text{
+.confirm-text{
+    color: #4cc34c;
+    font-size: small;
+}
+
+.error-text{
     color: #aa2222;
     font-size: small;
 }
@@ -47,9 +52,9 @@
 }
 
 .background{
-    /* background-image: url("../media/photo3.jpg"); */
-    /* background-size: cover; */
-    background-color: #5a5a5a;
+    background-image: url("../media/photo3.jpg");
+    background-size: cover;
+    /* background-color: #5a5a5a; */
 }
 
 a{
