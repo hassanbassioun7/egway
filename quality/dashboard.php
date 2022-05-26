@@ -3,6 +3,8 @@
     include_once("../includes/connection.php");
     include_once("../includes/functions.php");
 
+    access($con);
+
     $selectquery = "SELECT * FROM users";
     $selectresult = mysqli_query($con, $selectquery);
  
@@ -54,7 +56,7 @@
                     <?php
                         if(isset($user_data))
                         {
-                            echo $user_data['role'];
+                            echo $user_data['role_name'];
                         }
                     ?>
                 </small>
@@ -63,8 +65,6 @@
     </header>
     <div class="page-container">
         <nav class="nav">
-            <!-- for making a collapsable navbar from its border -->
-            <!-- <div class="nav__border"></div> -->
             <ul class="nav__list">
                 <a href="dashboard.php" class="nav__link active">
                     <div class="nav__icon-container">
@@ -74,9 +74,21 @@
                 </a>
                 <a href="users.php" class="nav__link">
                     <div class="nav__icon-container">
+                        <span class="material-icons">manage_accounts</span>
+                    </div>
+                    <span class="nav__label">Costumer Service</span>
+                </a>
+                <a href="travellers.php" class="nav__link">
+                    <div class="nav__icon-container">
                         <span class="material-icons">account_circle</span>
                     </div>
-                    <span class="nav__label">Users</span>
+                    <span class="nav__label">Travellers</span>
+                </a>
+                <a href="quality_comments.php" class="nav__link">
+                    <div class="nav__icon-container">
+                        <span class="material-icons">chat</span>
+                    </div>
+                    <span class="nav__label">Comments</span>
                 </a>
                 <a href="flights.php" class="nav__link">
                     <div class="nav__icon-container">
@@ -90,12 +102,6 @@
                     </div>
                     <span class="nav__label">Assessment</span>
                 </a>
-                <a href="profit.php" class="nav__link">
-                    <div class="nav__icon-container">
-                        <span class="material-icons">paid</span>
-                    </div>
-                    <span class="nav__label">Profit</span>
-                </a>
                 <a href="../includes/logout.php" class="nav__link">
                     <div class="nav__icon-container">
                         <span class="material-icons">logout</span>
@@ -106,11 +112,11 @@
         </nav>
         <div class="content">
             <div class="cards">
-                <a href="users.php" class="card-single">
+                <a href="travellers.php" class="card-single">
                     <div>
                         <h1>
                             <?php
-                                $travellersquery = "SELECT user_id from users WHERE role = 'user' ";
+                                $travellersquery = "SELECT user_id from users WHERE role = 3 ";
                                 $travellersresult = mysqli_query($con, $travellersquery);
 
                                 $row = mysqli_num_rows($travellersresult);
@@ -142,13 +148,20 @@
                         <span class="material-icons">airplane_ticket</span>
                     </div>
                 </a>
-                <a href="profit.php" class="card-single">
+                <a href="quality_comments.php" class="card-single">
                     <div>
-                        <h1>$0</h1>
-                        <span>Income</span>
+                        <h1>
+                            <?php
+                                $commentquery = "SELECT * FROM comments";
+                                $commentresult = mysqli_query($con, $commentquery);
+                                $commentrow = mysqli_num_rows($commentresult);
+                                echo $commentrow;
+                            ?>
+                        </h1>
+                        <span>Comments</span>
                     </div>
                     <div>
-                        <span id class="material-icons">attach_money</span>
+                        <span id class="material-icons">chat</span>
                     </div>
                 </a>
             </div>

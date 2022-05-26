@@ -2,15 +2,16 @@
 
     include_once("../includes/connection.php");
     include_once("../includes/functions.php");
-    include_once("index.php");
 
-    $qualityquery = "SELECT * FROM users WHERE role =\"quality control\"";
+    access($con);
+
+    $qualityquery = "SELECT * FROM users WHERE role = 1";
     $qualityresult = mysqli_query($con, $qualityquery);
 
-    $servicequery = "SELECT * FROM users WHERE role =\"customer service\"";
+    $servicequery = "SELECT * FROM users WHERE role = 2";
     $serviceresult = mysqli_query($con, $servicequery);
 
-    $travellersquery = "SELECT * FROM users WHERE role =\"user\"";
+    $travellersquery = "SELECT * FROM users WHERE role = 3";
     $travellersresult = mysqli_query($con, $travellersquery);
 
     $name=$username=$password=$email=$role=$image='';
@@ -58,7 +59,7 @@
             $query = "INSERT into users (name, user_name, password, email, role, `image`) 
             VALUES ('$name','$username', '$password','$email', '$role', '$image')";
             mysqli_query($con, $query);
-            
+
             // so that if the page was reloaded manually it won't post (send to database) again
             header("Refresh: 0.1");
         }
@@ -72,7 +73,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/quality.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <title>Quality Control - users</title>
+    <title>Quality Control - service</title>
 </head>
 <body>
     <header>
@@ -81,7 +82,7 @@
             <div id="menu" class="menu-icon-container">
                 <span class="material-icons">menu</span>
             </div>
-            <h2>Users</h2>
+            <h2>Costumer Service</h2>
         </div>
         <div class="search-wrapper">
             <span class="material-icons search-icon">search</span>
@@ -109,7 +110,7 @@
                     <?php
                         if(isset($user_data))
                         {
-                            echo $user_data['role'];
+                            echo $user_data['role_name'];
                         }
                     ?>
                 </small>
@@ -127,9 +128,21 @@
                 </a>
                 <a href="users.php" class="nav__link active">
                     <div class="nav__icon-container">
+                        <span class="material-icons">manage_accounts</span>
+                    </div>
+                    <span class="nav__label">Costumer Service</span>
+                </a>
+                <a href="travellers.php" class="nav__link">
+                    <div class="nav__icon-container">
                         <span class="material-icons">account_circle</span>
                     </div>
-                    <span class="nav__label">Users</span>
+                    <span class="nav__label">Travellers</span>
+                </a>
+                <a href="quality_comments.php" class="nav__link">
+                    <div class="nav__icon-container">
+                        <span class="material-icons">chat</span>
+                    </div>
+                    <span class="nav__label">Comments</span>
                 </a>
                 <a href="flights.php" class="nav__link">
                     <div class="nav__icon-container">
@@ -143,12 +156,6 @@
                     </div>
                     <span class="nav__label">Assessment</span>
                 </a>
-                <a href="profit.php" class="nav__link">
-                    <div class="nav__icon-container">
-                        <span class="material-icons">paid</span>
-                    </div>
-                    <span class="nav__label">Profit</span>
-                </a>
                 <a href="../includes/logout.php" class="nav__link">
                     <div class="nav__icon-container">
                         <span class="material-icons">logout</span>
@@ -158,48 +165,21 @@
             </ul>
         </nav>
         <div class="content">
-            <div class="errors">
-                <?php
-                    if(!$errors['name']=='')
-                    {
-                        echo "<div class=\"red-text\">" . $errors['name'] . "</div>";
-                    }
-                    if(!$errors['username']=='')
-                    {
-                        echo "<div class=\"red-text\">" . $errors['username'] . "</div>";
-                    }
-                    if(!$errors['password']=='')
-                    {
-                        echo "<div class=\"red-text\">" . $errors['password'] . "</div>";
-                    }
-                    if(!$errors['email']=='')
-                    {
-                        echo "<div class=\"red-text\">" . $errors['email'] . "</div>";
-                    }
-                    if(!$errors['role']=='')
-                    {
-                        echo "<div class=\"red-text\">" . $errors['role'] . "</div>";
-                    }
-                    if(!$errors['image']=='')
-                    {
-                        echo "<div class=\"red-text\">" . $errors['image'] . "</div>";
-                    }
-                ?>
-            </div>
             <div class="user_tables">
                 <div class="table-box">
-                    <div class="card-header">
+                    <div class="card-header sticky">
                         <h3>Costumer Service</h3>
                     </div>
                     <table class="table">
-                        <thead style="box-shadow: 0 3px 5px rgba(0,0,0,0.2);>
-                            <tr class="sticky">
-                                <th> Profile Picture</th>
+                        <thead>
+                            <tr>
                                 <th>ID</th>
-                                <th>User Name</th>
+                                <th> Profile Picture</th>
+                                <th>Username</th>
                                 <th>Password</th>
                                 <th>edit</th>
                                 <th>delete</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -209,17 +189,27 @@
                                     while($row = mysqli_fetch_assoc($serviceresult)){
                             ?>
                             <tr>
-                                <?php
-                                echo '<td><img src="data:image;base64,' .base64_encode($row['image']).'" class="profile_picture"></td>';
-                                ?>
                                 <td><?php echo $row["user_id"] ?></td>
-                                <td><?php echo $row["name"] ?></td>
+                                <?php
+                                echo '<td><a href="profile.php?viewID=' . $row['user_id'] .'"><img src="data:image;base64,' .base64_encode($row['image']).'" class="profile_picture"></a></td>';
+                                ?>
+                                <td><?php echo $row["user_name"] ?></td>
                                 <td><?php echo $row["password"] ?></td>
                                 <td>
                                     <button class="edit"><a href="../includes/edit.php?editID=<?php echo $row['user_id'] ?>">edit</a></button>
                                 </td>
                                 <td>
                                     <button class="delete"><a href="../includes/delete.php?deleteID=<?php echo $row['user_id'] ?>">delete</a></button>
+                                </td>
+                                <td>
+                                    <?php
+                                        if($row["status"] == 1){
+                                            echo '<button class="disable"><a href="../includes/disable.php?disableID='. $row['user_id'] .'">Disable</a></button>';
+                                        }
+                                        else{
+                                            echo '<button class="enable"><a href="../includes/enable.php?enableID='. $row['user_id'] .'">Enable</a></button>';
+                                        }
+                                    ?>
                                 </td>
                             </tr>
                             <?php
@@ -233,16 +223,14 @@
                     </table>
                 </div>
                 <div class="table-box">
-                    <div class="card-header">
+                    <div class="card-header sticky">
                         <h3>Quality Control</h3>
                     </div>
                     <table class="table">
-                        <thead style="box-shadow: 0 3px 5px rgba(0,0,0,0.2);">
-                            <tr class="sticky">
+                        <thead>
+                            <tr>
                                 <th> Profile Picture</th>
-                                <th>ID</th>
-                                <th>User Name</th>
-                                <th>Password</th>
+                                <th>Username</th>
                                 <th>edit</th>
                                 <th>delete</th>
                             </tr>
@@ -252,14 +240,26 @@
                                 if(mysqli_num_rows($qualityresult) > 0){
                                     echo "<tbody>";
                                     while($row = mysqli_fetch_assoc($qualityresult)){
+                                        if($user_data['user_id'] == $row['user_id']){
+                                            echo '<tr style="background-color: #aadcff">';
+                                        }
+                                        else{
+                                            echo '<tr>';
+                                        }
                             ?>
-                            <tr>
-                                <?php echo '<td><img src="data:image;base64,' .base64_encode($row['image']).'" class="profile_picture"></td>'; ?>
-                                <td><?php echo $row["user_id"] ?></td>
-                                <td><?php echo $row["name"] ?></td>
-                                <td><?php echo $row["password"] ?></td>
+                                <?php
+                                echo '<td><a href="profile.php?viewID=' . $row['user_id'] .'"><img src="data:image;base64,' .base64_encode($row['image']).'" class="profile_picture"></a></td>';
+                                ?>
+                                <td><?php echo $row["user_name"] ?></td>
                                 <td>
-                                    <button class="edit"><a href="../includes/edit.php?editID=<?php echo $row['user_id'] ?>">edit</a></button>
+                                    <button <?php
+                                        if($user_data['user_id'] == $row['user_id']){
+                                            echo 'class="active_edit"';
+                                        }
+                                        else{
+                                            echo 'class="edit"';
+                                        }
+                                    ?> ><a href="../includes/edit.php?editID=<?php echo $row['user_id'] ?>">edit</a></button>
                                 </td>
                                 <td>
                                     <button class="delete"><a href="../includes/delete.php?deleteID=<?php echo $row['user_id'] ?>">delete</a></button>
@@ -315,9 +315,8 @@
                                 <label>Role: </label>
                                 <select  class="crud-form-input" name="role" required>
                                     <option value="">(Please choose a role)</option>
-                                    <option value="user">User</option>
-                                    <option value="customer service">Customer service</option>
-                                    <option value="quality control">Quality control</option>
+                                    <option value="2">Customer service</option>
+                                    <option value="1">Quality control</option>
                                 </select><br>
                             </div>
                             <div class="modal_bottom">

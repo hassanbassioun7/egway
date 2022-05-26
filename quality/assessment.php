@@ -2,7 +2,8 @@
 
     include_once("../includes/connection.php");
     include_once("../includes/functions.php");
-    include_once("index.php");
+
+    access($con);
 
     $selectquery = "SELECT * FROM users";
     $selectresult = mysqli_query($con, $selectquery);
@@ -55,7 +56,7 @@
                     <?php
                         if(isset($user_data))
                         {
-                            echo $user_data['role'];
+                            echo $user_data['role_name'];
                         }
                     ?>
                 </small>
@@ -64,8 +65,6 @@
     </header>
     <div class="page-container">
         <nav class="nav">
-            <!-- for making a collapsable navbar from its border -->
-            <!-- <div class="nav__border"></div> -->
             <ul class="nav__list">
                 <a href="dashboard.php" class="nav__link">
                     <div class="nav__icon-container">
@@ -75,9 +74,21 @@
                 </a>
                 <a href="users.php" class="nav__link">
                     <div class="nav__icon-container">
+                        <span class="material-icons">manage_accounts</span>
+                    </div>
+                    <span class="nav__label">Costumer Service</span>
+                </a>
+                <a href="travellers.php" class="nav__link">
+                    <div class="nav__icon-container">
                         <span class="material-icons">account_circle</span>
                     </div>
-                    <span class="nav__label">Users</span>
+                    <span class="nav__label">Travellers</span>
+                </a>
+                <a href="quality_comments.php" class="nav__link">
+                    <div class="nav__icon-container">
+                        <span class="material-icons">chat</span>
+                    </div>
+                    <span class="nav__label">Comments</span>
                 </a>
                 <a href="flights.php" class="nav__link">
                     <div class="nav__icon-container">
@@ -91,12 +102,6 @@
                     </div>
                     <span class="nav__label">Assessment</span>
                 </a>
-                <a href="profit.php" class="nav__link">
-                    <div class="nav__icon-container">
-                        <span class="material-icons">paid</span>
-                    </div>
-                    <span class="nav__label">Profit</span>
-                </a>
                 <a href="../includes/logout.php" class="nav__link">
                     <div class="nav__icon-container">
                         <span class="material-icons">logout</span>
@@ -106,13 +111,34 @@
             </ul>
         </nav>
         <div class="content">
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quaerat quidem eius sit hic incidunt accusamus minima deleniti, repellendus accusantium est dolor vero esse neque consequuntur qui, exercitationem ut nostrum.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quaerat quidem eius sit hic incidunt accusamus minima deleniti, repellendus accusantium est dolor vero esse neque consequuntur qui, exercitationem ut nostrum.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quaerat quidem eius sit hic incidunt accusamus minima deleniti, repellendus accusantium est dolor vero esse neque consequuntur qui, exercitationem ut nostrum.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quaerat quidem eius sit hic incidunt accusamus minima deleniti, repellendus accusantium est dolor vero esse neque consequuntur qui, exercitationem ut nostrum.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quaerat quidem eius sit hic incidunt accusamus minima deleniti, repellendus accusantium est dolor vero esse neque consequuntur qui, exercitationem ut nostrum.
-            </p>
+            <div class="prev-comments">
+                <?php
+                    $query = "SELECT users.image, users.name, users.email, ratings.rating
+                    FROM users INNER JOIN ratings ON users.user_id=ratings.userID;";
+                    $result = mysqli_query($con, $query);
+                    if(mysqli_num_rows($result) > 0){
+                        while($row = mysqli_fetch_assoc($result)){
+                            ?>
+                                <div class="single-item" style="display: flex; margin: 0 0 35px 0">
+                                    <div class="comment-header" style="display: flex;">
+                                        <?php echo '<img src="data:image;base64,' .base64_encode($row['image']).'" class="profile_picture" style="margin-right: 1rem">'?>
+                                        <div class="info-row">
+                                            <h4><?php echo $row['name'] ?></h4>
+                                            <a href="mailto:purecodingofficial@gmail.com"><?php echo $row['email'] ?></a>
+                                        </div>
+                                        <div>
+                                            <p>
+                                                <?php echo $row['rating'] ?>
+                                                <span class="material-icons" style="color: gold">star</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php
+                        }
+                    }
+                ?>
+            </div>
         </div>
     </div>
 </body>

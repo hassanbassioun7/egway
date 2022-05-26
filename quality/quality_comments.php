@@ -18,8 +18,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/quality.css">
+    <link rel="stylesheet" href="../CSS/comment.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <title>Quality Control - flights</title>
+    <title>Quality Control - comments</title>
 </head>
 <body>
     <header>
@@ -28,7 +29,7 @@
             <div id="menu" class="menu-icon-container">
                 <span class="material-icons">menu</span>
             </div>
-            <h2>Flights</h2>
+            <h2>Comments</h2>
         </div>
         <div class="search-wrapper">
             <span class="material-icons search-icon">search</span>
@@ -86,13 +87,13 @@
                     </div>
                     <span class="nav__label">Travellers</span>
                 </a>
-                <a href="quality_comments.php" class="nav__link">
+                <a href="quality_comments.php" class="nav__link active">
                     <div class="nav__icon-container">
                         <span class="material-icons">chat</span>
                     </div>
                     <span class="nav__label">Comments</span>
                 </a>
-                <a href="flights.php" class="nav__link active">
+                <a href="flights.php" class="nav__link">
                     <div class="nav__icon-container">
                         <span class="material-icons">flight</span>
                     </div>
@@ -113,12 +114,32 @@
             </ul>
         </nav>
         <div class="content">
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quaerat quidem eius sit hic incidunt accusamus minima deleniti, repellendus accusantium est dolor vero esse neque consequuntur qui, exercitationem ut nostrum.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quaerat quidem eius sit hic incidunt accusamus minima deleniti, repellendus accusantium est dolor vero esse neque consequuntur qui, exercitationem ut nostrum.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quaerat quidem eius sit hic incidunt accusamus minima deleniti, repellendus accusantium est dolor vero esse neque consequuntur qui, exercitationem ut nostrum.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quaerat quidem eius sit hic incidunt accusamus minima deleniti, repellendus accusantium est dolor vero esse neque consequuntur qui, exercitationem ut nostrum.
-            </p>
+            <div class="prev-comments">
+                <?php
+                    $query = "SELECT users.image, users.name, users.email, comments.comment, comments.comment_date
+                    FROM comments INNER JOIN users ON comments.user_id=users.user_id;";
+                    $result = mysqli_query($con, $query);
+                    if(mysqli_num_rows($result) > 0){
+                        while($row = mysqli_fetch_assoc($result)){
+                            ?>
+                                <div class="single-item">
+                                    <div class="comment-header" style="display: flex;">
+                                        <?php echo '<img src="data:image;base64,' .base64_encode($row['image']).'" class="profile_picture" style="margin-right: 1rem">'?>
+                                        <div class="info-row">
+                                            <h4><?php echo $row['name'] ?></h4>
+                                            <a href="mailto:purecodingofficial@gmail.com"><?php echo $row['email'] ?></a>
+                                        </div>
+                                        <div style="margin-left: auto; font-size: 0.8rem" class="date"><?php echo date('d-M g:i a', strtotime($row['comment_date'])) ?></div>
+                                    </div>
+                                    <div class="comm">
+                                        <p style="border: 2px solid #eee; padding: 3px; border-radius: 5px;"><?php echo $row['comment'] ?></p>
+                                    </div>
+                                </div>
+                            <?php
+                        }
+                    }
+                ?>
+            </div>
         </div>
     </div>
 </body>
