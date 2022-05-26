@@ -6,6 +6,7 @@
     $errors = array('name'=>'', 'username'=>'', 'password'=>'','email'=>'', 'role'=>'', 'image'=>'' );
 
     $id = $_GET['editID'];
+    
     $idQuery = "SELECT * FROM users WHERE user_id=$id";
     $idResult = mysqli_query($con, $idQuery);
     $idRow = mysqli_fetch_assoc($idResult);
@@ -17,18 +18,12 @@
         $email = $_POST['email'];
         $role = $_POST['role'];
 
-        // $usernamequery = mysqli_query($con, "SELECT * FROM users WHERE user_name = '$username'");
-        // if(mysqli_num_rows($usernamequery) > 0)
-        // {
-        //     $errors['username'] = "this username already exists!";
-        // }
-
         if(!array_filter($errors))
         {
-        
-            $updateQuery = "UPDATE users set user_id='$id', name='$name', user_name='$username', password='$password', email='$email', role='$role' 
-            WHERE user_id=$id";
+            $updateQuery = "UPDATE users SET name='$name', user_name='$username', password='$password', email='$email', role='$role' 
+            WHERE user_id = $id";
             $updateResult = mysqli_query($con, $updateQuery);
+
             if($updateResult){
                 header('location:../quality/users.php');
             }
@@ -42,6 +37,7 @@
     <meta charset="UTF-8">
     <title>Edit</title>
     <link rel="stylesheet" href="../CSS/quality.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="modal" style="display: flex">
@@ -50,7 +46,7 @@
                 <div class="modal_title">Edit</div>
             </div>
             <div class="modal_content">
-                <form action="" method="POST" class="crud-form" enctype="multipart/form-data">
+                <form action="" method="POST" class="crud-form">
                     <div class="input-div">
                         <label>Name: </label>
                         <input type="text" name="name" placeholder="name" class="crud-form-input" value="<?php echo $idRow['name'] ?>"><br>
@@ -70,8 +66,16 @@
                     <div class="input-div">
                         <label>Role: </label>
                         <select  class="crud-form-input" name="role">
-                            <option value="customer service">Customer service</option>
-                            <option value="quality control">Quality control</option>
+                            <?php
+                                if($idRow['role'] == 1){
+                                    echo '<option value="1">Quality control</option>
+                                    <option value="2">Customer service</option>';
+                                }
+                                else if($idRow['role'] == 2){
+                                    echo '<option value="2">Customer service</option>
+                                    <option value="1">Quality control</option>';
+                                }
+                            ?>
                         </select><br>
                     </div>
                     <div class="modal_bottom">
