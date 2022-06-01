@@ -7,7 +7,7 @@
 	</style>
 	<script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
 	<script>
-		function checkAvailability() 
+		function checkAvailability()
 		{
 			jQuery.ajax(
 			{
@@ -39,7 +39,7 @@
 <body>
 	<h1>Check if username is available in database</h2>
 	<label>Check Username:</label>
-	<input name="username" type="text" id="username" onkeyup="acheckAvailability()">
+	<input name="username" type="text" id="username" onkeyup="checkAvailability()">
 	<div id="msg"></div>    
 	
 	<br><hr><br>
