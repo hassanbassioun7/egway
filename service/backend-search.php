@@ -1,5 +1,5 @@
 <?php
-$con = mysqli_connect("localhost", "root", "", "egway");
+include_once("../includes/connection.php");
  
 $sql = "Select users.user_id, users.name, users.user_name, users.email, users.gender, users.user_birth, users.date, users.role from users" ;
 // Escape user inputs for security
