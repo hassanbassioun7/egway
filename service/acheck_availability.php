@@ -1,14 +1,15 @@
 <?php
-$conn= new mysqli("localhost","root","","egway");
+include_once("../includes/connection.php");
 
-if(!empty ($_POST["name"]))
+if(!empty ($_POST['username']))
 {
-	$query="SELECT * FROM users WHERE name='".$_Post["name"]."'OR user_name	='".$_Post["user_name"]."'OR user_id='".$_Post["user_id"]."'";
-	$result= mysqli_query ($conn,$query);
+    $username=$_POST['username'];
+	$query="SELECT * FROM users WHERE user_name	= '$username'";
+	$result= mysqli_query ($con, $query);
 	$user_count=mysqli_num_rows($result);
 	if($user_count>0)
 	{
-		echo" <div class='name-taken'> Username taken try agian try another one. </div>";
+		echo "<div class='name-taken'> Username taken try agian try another one. </div>";
 	}
 	else
 	{
